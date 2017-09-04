@@ -45,12 +45,14 @@ const addTodo = (payload) => ({
 4. Update the model when an action is dispatched.
 
 ```javascript
-const update = (model, action) => {
+const update = (state, action) => {
   switch (action.type) {
     case msg.SET_INPUT:
-      return { ...model, input: action.payload }
+      return { ...state, input: action.payload }
+    case msg.ADD_TODO:
+      return { ...state, todos: [...state.todos, action.payload] }
     default:
-      return model
+      return state
   }
 }
 ```
