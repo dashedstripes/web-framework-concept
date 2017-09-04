@@ -1,5 +1,7 @@
+// State object
 let state = {}
 
+// Initial Model
 const model = Object.freeze(
   {
     input: '',
@@ -7,6 +9,7 @@ const model = Object.freeze(
   }
 )
 
+// Messages
 const msg = Object.freeze(
   {
     ADD_TODO: 0,
@@ -14,6 +17,7 @@ const msg = Object.freeze(
   }
 )
 
+// Action creators
 const setInput = (payload) => ({
   type: msg.SET_INPUT,
   payload
@@ -24,21 +28,24 @@ const addTodo = (payload) => ({
   payload
 })
 
-const update = (model, action) => {
+// Update the state
+const update = (state, action) => {
   switch (action.type) {
     case msg.SET_INPUT:
-      return { ...model, input: action.payload }
+      return { ...state, input: action.payload }
+    case msg.ADD_TODO:
+      return { ...state, todos: [...state.todos, action.payload] }
     default:
-      return model
+      return state
   }
 }
 
+// Dispatch an action and set the state
 const dispatch = (action) => {
-  state = update(model, action)
+  state = update(state, action)
 }
 
-// HTML Rendering
-
+// Render the HTML
 const Todo = ({ text }) => (
   li([{ text: text }], [], [])
 )
@@ -58,3 +65,6 @@ const render = () => (
   TodoList(),
   NewTodo()
 )
+
+// Start the app
+state = model
