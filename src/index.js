@@ -1,3 +1,5 @@
+import { div, h2, ul, li, render } from './Html'
+
 // State object
 let state = {}
 
@@ -5,7 +7,16 @@ let state = {}
 const model = Object.freeze(
   {
     input: '',
-    todos: []
+    todos: [
+      {
+        id: 1,
+        text: 'Order a tesla'
+      },
+      {
+        id: 2,
+        text: 'Build a web framework'
+      }
+    ]
   }
 )
 
@@ -42,7 +53,9 @@ const update = (state, action) => {
 
 // Dispatch an action and set the state
 const dispatch = (action) => {
+  console.log(action)
   state = update(state, action)
+  console.log(state)
 }
 
 // Render the HTML
@@ -50,21 +63,18 @@ const Todo = ({ text }) => (
   li([{ text: text }], [], [])
 )
 
-const TodoList = () => {
+const TodoList = () => (
   ul([{ class: 'todo-list' }], [], state.todos.map((todo) => (
     Todo(todo)
   )))
-}
-
-const NewTodo = () => (
-  input([{ type: 'text' }], [{ onChange: dispatch(setInput(this.value)) }], []), // 'this' refers to the input DOM node
-  button([{ text: 'Add Todo' }], [{ onClick: dispatch(addTodo({ id: Date.now(), text: state.input })) }], [])
 )
 
-const render = () => (
-  TodoList(),
-  NewTodo()
-)
+const App = () => ([
+  h2([{ text: 'Todo List' }], [], []),
+  TodoList()
+])
 
 // Start the app
 state = model
+
+render(App)
