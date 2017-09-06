@@ -150,8 +150,12 @@ var TodoList = function TodoList() {
   }));
 };
 
+var NewTodo = function NewTodo() {
+  return (0, _Html.div)([], [], [(0, _Html.input)([{ type: 'text', value: state.input }], [], []), (0, _Html.button)([{ text: 'Add Todo' }], [], [])]);
+};
+
 var App = function App() {
-  return [(0, _Html.h2)([{ text: 'Todo List' }], [], []), TodoList()];
+  return [(0, _Html.h2)([{ text: 'Todo List' }], [], []), TodoList(), NewTodo()];
 };
 
 // Start the app

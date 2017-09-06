@@ -1,4 +1,4 @@
-import { div, h2, ul, li, render } from './Html'
+import { div, h2, ul, li, input, button, render } from './Html'
 
 // State object
 let state = {}
@@ -69,9 +69,17 @@ const TodoList = () => (
   )))
 )
 
+const NewTodo = () => (
+  div([], [], [
+    input([{ type: 'text', value: state.input }], [], []),
+    button([{ text: 'Add Todo' }], [], [])
+  ])
+)
+
 const App = () => ([
   h2([{ text: 'Todo List' }], [], []),
-  TodoList()
+  TodoList(),
+  NewTodo()
 ])
 
 // Start the app
