@@ -152,13 +152,14 @@ var TodoList = function TodoList() {
 
 var NewTodo = function NewTodo() {
   return (0, _Html.div)([], [], [(0, _Html.input)([{ type: 'text', value: state.input }], [{
-    onChange: function onChange(e) {
-      dispatch.call(setInput('hello'));
-      console.log(e);
+    onChange: function onChange() {
+      return dispatch.call(setInput(state.input));
     }
-  }], []), (0, _Html.button)([{ text: 'Add Todo' }], [{ onClick: function onClick() {
+  }], []), (0, _Html.button)([{ text: 'Add Todo' }], [{
+    onClick: function onClick() {
       return dispatch.call(addTodo({ id: Date.now(), text: 'Do something else' }));
-    } }], [])]);
+    }
+  }], [])]);
 };
 
 var App = function App() {
@@ -234,15 +235,25 @@ function setAttribute(attr, el, val) {
 
 function setEvents(node, element) {
   node.events.map(function (event) {
-    for (var prop in event) {
+    var _loop = function _loop(prop) {
       switch (prop) {
         case 'onChange':
-          element.addEventListener('keydown', event[prop], false);
+          element.addEventListener('keydown', function () {
+            return event[prop]();
+          }, false);
+          break;
         case 'onClick':
-          element.addEventListener('click', event[prop]);
+          element.addEventListener('click', function () {
+            return event[prop]();
+          }, false);
+          break;
         default:
           break;
       }
+    };
+
+    for (var prop in event) {
+      _loop(prop);
     }
   });
 }
