@@ -132,11 +132,10 @@ var update = function update(state, action) {
 };
 
 // Dispatch an action and set the state
-var dispatch = function dispatch(action) {
-  console.log(action);
-  state = update(state, action);
+function dispatch() {
+  state = update(state, this);
   console.log(state);
-};
+}
 
 // Render the HTML
 var Todo = function Todo(_ref) {
@@ -151,7 +150,9 @@ var TodoList = function TodoList() {
 };
 
 var NewTodo = function NewTodo() {
-  return (0, _Html.div)([], [], [(0, _Html.input)([{ type: 'text', value: state.input }], [], []), (0, _Html.button)([{ text: 'Add Todo' }], [], [])]);
+  return (0, _Html.div)([], [], [(0, _Html.input)([{ type: 'text', value: state.input }], [], []), (0, _Html.button)([{ text: 'Add Todo' }], [{ onClick: function onClick() {
+      return dispatch.call(addTodo({ id: Date.now(), text: 'Do something else' }));
+    } }], [])]);
 };
 
 var App = function App() {
@@ -188,6 +189,7 @@ function renderTree(tree, parent) {
   tree.map(function (v) {
     var el = createElement(v);
     setAttributes(v, el);
+    setEvents(v, el);
     renderElement(parent, el);
 
     if (v.children.length > 0) {
@@ -217,6 +219,21 @@ function setAttributes(node, element) {
 
 function setAttribute(attr, el, val) {
   el.setAttribute(attr, val);
+}
+
+function setEvents(node, element) {
+  node.events.map(function (event) {
+    for (var prop in event) {
+      switch (prop) {
+        case 'onChange':
+          event[prop]();
+        case 'onClick':
+          element.addEventListener('click', event[prop]);
+        default:
+          break;
+      }
+    }
+  });
 }
 
 function setText(element, text) {
