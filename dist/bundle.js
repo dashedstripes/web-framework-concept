@@ -77,34 +77,67 @@ module.exports = __webpack_require__(1);
 "use strict";
 
 
-function InputClass() {
-  var _this = this;
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-  this.value = '';
+var input = function input(attributes, events) {
+  var element = document.createElement('input');
 
-  this.element = document.createElement('input');
+  for (var prop in attributes) {
+    element.setAttribute(prop, attributes[prop]);
+  }
 
-  this.element.addEventListener('input', function (e) {
-    _this.value = _this.element.value;
-    _this.onChange(_this.value);
-  });
+  if (attributes.type === 'input') {
+    element.addEventListener('input', function (e) {
+      events.onChange(element.value);
+    });
+  }
 
-  document.body.appendChild(this.element);
-}
+  if (attributes.type === 'checkbox') {
+    element.addEventListener('change', function () {
+      events.onChange(element.checked);
+    });
+  }
 
-var input = function input(events) {
-  var input = new InputClass();
+  document.body.appendChild(element);
 
-  input.onChange = events.onChange;
-  return input.element;
+  return element;
 };
 
-var doSomething = function doSomething(val) {
-  console.log(val);
+var state = {
+  input: ''
 };
 
-input({ onChange: function onChange(val) {
-    return doSomething(val);
+var setInput = function setInput(payload) {
+  return {
+    type: 'SET_INPUT',
+    payload: payload
+  };
+};
+
+var toggleCheckbox = function toggleCheckbox(isChecked) {
+  return {
+    type: 'TOGGLE_CHECKBOX',
+    isChecked: isChecked
+  };
+};
+
+var dispatch = function dispatch(action) {
+  state = update(state, action);
+  console.log(action);
+  console.log(state);
+};
+
+var update = function update(state, action) {
+  switch (action.type) {
+    case 'SET_INPUT':
+      return _extends({}, state, { input: action.payload });
+    default:
+      return state;
+  }
+};
+
+input({ type: 'input', value: state.input }, { onChange: function onChange(val) {
+    return dispatch(setInput(val));
   } });
 
 /***/ })

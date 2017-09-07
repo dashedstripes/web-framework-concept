@@ -1,28 +1,58 @@
-function InputClass() {
+const input = (attributes, events) => {
+  let element = document.createElement('input')
 
-  this.value = ''
+  for (let prop in attributes) {
+    element.setAttribute(prop, attributes[prop])
+  }
 
-  this.element = document.createElement('input')
+  if (attributes.type === 'input') {
+    element.addEventListener('input', (e) => {
+      events.onChange(element.value)
+    })
+  }
 
-  this.element.addEventListener('input', (e) => {
-    this.value = this.element.value
-    this.onChange(this.value)
-  })
+  if (attributes.type === 'checkbox') {
+    element.addEventListener('change', () => {
+      events.onChange(element.checked)
+    })
+  }
 
-  document.body.appendChild(this.element)
+  document.body.appendChild(element)
 
+  return element
 }
 
-const input = (events) => {
-  let input = new InputClass()
-
-  input.onChange = events.onChange
-  return input.element
+let state = {
+  input: ''
 }
 
-const doSomething = (val) => {
-  console.log(val)
+const setInput = (payload) => {
+  return {
+    type: 'SET_INPUT',
+    payload
+  }
 }
 
-input({ onChange: (val) => doSomething(val) })
+const toggleCheckbox = (isChecked) => {
+  return {
+    type: 'TOGGLE_CHECKBOX',
+    isChecked
+  }
+}
 
+const dispatch = (action) => {
+  state = update(state, action)
+  console.log(action)
+  console.log(state)
+}
+
+const update = (state, action) => {
+  switch (action.type) {
+    case 'SET_INPUT':
+      return { ...state, input: action.payload }
+    default:
+      return state
+  }
+}
+
+input({ type: 'input', value: state.input }, { onChange: (val) => dispatch(setInput(val)) })
