@@ -52,10 +52,10 @@ const update = (state, action) => {
 }
 
 // Dispatch an action and set the state
-const dispatch = (action) => {
-  console.log(action)
-  state = update(state, action)
+function dispatch() {
+  state = update(state, this)
   console.log(state)
+  refreshDOM()
 }
 
 // Render the HTML
@@ -69,18 +69,29 @@ const TodoList = () => (
   )))
 )
 
-const NewTodo = () => (
-  div([], [], [
-    input([{ type: 'text', value: state.input }], [], []),
-    button([{ text: 'Add Todo' }], [], [])
-  ])
-)
+const NewTodo = () => {
+  return (
+    div([], [], [
+      input([{ type: 'text', value: state.input }], [{
+        onChange: () => dispatch.call(setInput(state.input))
+      }], []),
+      button([{ text: 'Add Todo' }], [{
+        onClick: () => dispatch.call(addTodo({ id: Date.now(), text: 'Do something else' }))
+      }], [])
+    ])
+  )
+}
 
 const App = () => ([
   h2([{ text: 'Todo List' }], [], []),
   TodoList(),
   NewTodo()
 ])
+
+const refreshDOM = () => {
+  document.body.innerHTML = ''
+  render(App)
+}
 
 // Start the app
 state = model

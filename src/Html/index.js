@@ -1,4 +1,4 @@
-let node = (type = '', attributes = [], events = [], children = []) => {
+const node = (type = '', attributes = [], events = [], children = []) => {
   return {
     type,
     attributes,
@@ -11,6 +11,7 @@ function renderTree(tree, parent) {
   tree.map(v => {
     let el = createElement(v)
     setAttributes(v, el)
+    setEvents(v, el)
     renderElement(parent, el)
 
     if (v.children.length > 0) {
@@ -40,6 +41,23 @@ function setAttributes(node, element) {
 
 function setAttribute(attr, el, val) {
   el.setAttribute(attr, val)
+}
+
+function setEvents(node, element) {
+  node.events.map(event => {
+    for (let prop in event) {
+      switch (prop) {
+        case 'onChange':
+          element.addEventListener('keydown', () => event[prop](), false)
+          break
+        case 'onClick':
+          element.addEventListener('click', () => event[prop](), false)
+          break
+        default:
+          break
+      }
+    }
+  })
 }
 
 function setText(element, text) {
