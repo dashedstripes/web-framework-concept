@@ -152,12 +152,12 @@ var TodoList = function TodoList() {
 
 var NewTodo = function NewTodo() {
   return (0, _Html.div)([], [], [(0, _Html.input)([{ type: 'text', value: state.input }], [{
-    onChange: function onChange() {
-      return dispatch.call(setInput(state.input));
+    onChange: function onChange(e) {
+      dispatch.call(setInput(e));
     }
   }], []), (0, _Html.button)([{ text: 'Add Todo' }], [{
     onClick: function onClick() {
-      return dispatch.call(addTodo({ id: Date.now(), text: 'Do something else' }));
+      return dispatch.call(addTodo({ id: Date.now(), text: state.input }));
     }
   }], [])]);
 };
@@ -238,8 +238,9 @@ function setEvents(node, element) {
     var _loop = function _loop(prop) {
       switch (prop) {
         case 'onChange':
-          element.addEventListener('keydown', function () {
-            return event[prop]();
+          element.addEventListener('keydown', function (e) {
+            element.value += e.key;
+            event[prop](element.value);
           }, false);
           break;
         case 'onClick':
