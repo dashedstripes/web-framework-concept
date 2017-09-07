@@ -77,7 +77,7 @@ module.exports = __webpack_require__(1);
 "use strict";
 
 
-function Input() {
+function InputClass() {
   var _this = this;
 
   this.value = '';
@@ -86,12 +86,26 @@ function Input() {
 
   this.element.addEventListener('input', function (e) {
     _this.value = _this.element.value;
+    _this.onChange(_this.value);
   });
+
+  document.body.appendChild(this.element);
 }
 
-var input = new Input();
+var input = function input(events) {
+  var input = new InputClass();
 
-document.body.appendChild(input.element);
+  input.onChange = events.onChange;
+  return input.element;
+};
+
+var doSomething = function doSomething(val) {
+  console.log(val);
+};
+
+input({ onChange: function onChange(val) {
+    return doSomething(val);
+  } });
 
 /***/ })
 /******/ ]);

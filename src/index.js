@@ -1,4 +1,4 @@
-function Input() {
+function InputClass() {
 
   this.value = ''
 
@@ -6,10 +6,23 @@ function Input() {
 
   this.element.addEventListener('input', (e) => {
     this.value = this.element.value
+    this.onChange(this.value)
   })
+
+  document.body.appendChild(this.element)
 
 }
 
-let input = new Input()
+const input = (events) => {
+  let input = new InputClass()
 
-document.body.appendChild(input.element)
+  input.onChange = events.onChange
+  return input.element
+}
+
+const doSomething = (val) => {
+  console.log(val)
+}
+
+input({ onChange: (val) => doSomething(val) })
+
