@@ -135,6 +135,7 @@ var update = function update(state, action) {
 function dispatch() {
   state = update(state, this);
   console.log(state);
+  refreshDOM();
 }
 
 // Render the HTML
@@ -150,13 +151,23 @@ var TodoList = function TodoList() {
 };
 
 var NewTodo = function NewTodo() {
-  return (0, _Html.div)([], [], [(0, _Html.input)([{ type: 'text', value: state.input }], [], []), (0, _Html.button)([{ text: 'Add Todo' }], [{ onClick: function onClick() {
+  return (0, _Html.div)([], [], [(0, _Html.input)([{ type: 'text', value: state.input }], [{
+    onChange: function onChange(e) {
+      dispatch.call(setInput('hello'));
+      console.log(e);
+    }
+  }], []), (0, _Html.button)([{ text: 'Add Todo' }], [{ onClick: function onClick() {
       return dispatch.call(addTodo({ id: Date.now(), text: 'Do something else' }));
     } }], [])]);
 };
 
 var App = function App() {
   return [(0, _Html.h2)([{ text: 'Todo List' }], [], []), TodoList(), NewTodo()];
+};
+
+var refreshDOM = function refreshDOM() {
+  document.body.innerHTML = '';
+  (0, _Html.render)(App);
 };
 
 // Start the app
@@ -226,7 +237,7 @@ function setEvents(node, element) {
     for (var prop in event) {
       switch (prop) {
         case 'onChange':
-          event[prop]();
+          element.addEventListener('keydown', event[prop], false);
         case 'onClick':
           element.addEventListener('click', event[prop]);
         default:
